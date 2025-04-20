@@ -1,0 +1,34 @@
+---
+- name: Setup DevOps Demo Environment
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: Create project directories
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - "{{ ansible_env.HOME }}/devops-demo-env/app"
+        - "{{ ansible_env.HOME }}/devops-demo-env/production"
+        - "{{ ansible_env.HOME }}/devops-demo-env/production-blue"
+        - "{{ ansible_env.HOME }}/devops-demo-env/production-green"
+        - "{{ ansible_env.HOME }}/devops-demo-env/logs"
+
+    - name: Install Python dependencies
+      pip:
+        name:
+          - pip
+          - flask
+          - pytest
+        state: present
+
+    - name: Copy app files
+      copy:
+        src: "{{ playbook_dir }}/../{{ item }}"
+        dest: "{{ ansible_env.HOME }}/devops-demo-env/app/"
+      loop:
+        - app/
+        - tests/
+        - run.py
+        - requirements.txt
