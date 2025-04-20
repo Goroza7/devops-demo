@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from datetime import datetime
+
 
 main = Blueprint('main', __name__)
 
@@ -12,5 +14,6 @@ def index():
 def add_message():
     message = request.form.get('message')
     if message:
-        messages.append(message)
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        messages.append(f"[{timestamp}] {message}")
     return redirect(url_for('main.index'))
